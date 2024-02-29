@@ -17,6 +17,26 @@ class HomePage extends StatelessWidget {
     'Roberto',
     'Maria',
     'Santino',
+    'Aloísio',
+    'Matheus',
+    'Roberto',
+    'Maria',
+    'Santino',
+    'Aloísio',
+    'Matheus',
+    'Roberto',
+    'Maria',
+    'Santino',
+    'Aloísio',
+    'Matheus',
+    'Roberto',
+    'Maria',
+    'Santino',
+    'Aloísio',
+    'Matheus',
+    'Roberto',
+    'Maria',
+    'Santino',
   ];
 
   @override
@@ -24,83 +44,121 @@ class HomePage extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Caixinha'),
+          title: const Text(
+            'Caixinha',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
+          backgroundColor: AppColors.colorPrimary,
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Text(
-                    '2024',
-                    style:
-                        TextStyle(fontSize: 24, color: AppColors.colorPrimary, fontWeight: FontWeight.bold),
+        body: Container(
+          decoration: BoxDecoration(color: AppColors.colorPrimary),
+          height: MediaQuery.of(context).size.height,
+          child: Flex(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            direction: Axis.vertical,
+            children: [
+              Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24)),
+                margin: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 15),
+                    Text(
+                      '2024',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 24,
+                          color: AppColors.colorPrimary,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 15),
+                    Text(
+                      'Valor (mensal): R\$ 50,00',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    const SizedBox(height: 15),
+                    Text(
+                      'Pagar até: dia 10',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
+              Flexible(
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(48),
+                        topRight: Radius.circular(48)),
                   ),
-                ),
-                const SizedBox(height: 15),
-                const Center(
-                  child: Text(
-                    'Valor (mensal): R\$ 50,00',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ),
-                const SizedBox(height: 15),
-                const Center(
-                  child: Text(
-                    'Pagar até: dia 10',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Divider(),
-                const SizedBox(height: 35),
-                Text(
-                  'Participantes',
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: AppColors.colorPrimary,
-                      fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 10),
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: participantes.length,
-                  itemBuilder: (_, index) {
-                    return InkWell(
-                      onTap: () {
-                        Modular.to.pushNamed(
-                          AppRoutes.detailsParticipant,
-                          arguments: {'participant': participantes[index]},
-                        ).then((value) {
-                          if (value == 'deleted') {
-                            // todo delete participant
-                          }
-                        });
-                      },
-                      child: ListTile(
-                        title: Row(
-                          children: [
-                            Expanded(
-                                child: Text(
-                              participantes[index],
-                              overflow: TextOverflow.ellipsis,
-                            )),
-                            Text(
-                              'meses pagos: ${Random().nextInt(13)}',
-                              style: const TextStyle(color: Colors.black54),
-                            ),
-                            const SizedBox(width: 10),
-                            const Icon(Icons.keyboard_double_arrow_right, color: Colors.black26,),
-                          ],
+                  child: Column(
+                    children: [
+                      Text(
+                        'Participantes',
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: AppColors.colorPrimary,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 10),
+                      Expanded(
+                        child: Scrollbar(
+                          thumbVisibility: true,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: participantes.length,
+                            itemBuilder: (_, index) {
+                              return InkWell(
+                                onTap: () {
+                                  Modular.to.pushNamed(
+                                    AppRoutes.detailsParticipant,
+                                    arguments: {
+                                      'participant': participantes[index]
+                                    },
+                                  ).then((value) {
+                                    if (value == 'deleted') {
+                                      // todo delete participant
+                                    }
+                                  });
+                                },
+                                child: ListTile(
+                                  title: Row(
+                                    children: [
+                                      Expanded(
+                                          child: Text(
+                                        participantes[index],
+                                        overflow: TextOverflow.ellipsis,
+                                      )),
+                                      Text(
+                                        'meses pagos: ${Random().nextInt(13)}',
+                                        style: const TextStyle(
+                                            color: Colors.black54),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      const Icon(
+                                        Icons.keyboard_double_arrow_right,
+                                        color: Colors.black26,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
-                    );
-                  },
-                )
-              ],
-            ),
+                    ],
+                  ),
+                ),
+              )
+            ],
           ),
         ),
         floatingActionButton: FloatingActionButton.extended(
