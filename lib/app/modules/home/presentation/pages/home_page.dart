@@ -52,8 +52,17 @@ class HomePage extends StatelessWidget {
           backgroundColor: AppColors.colorPrimary,
         ),
         body: Container(
-          decoration: BoxDecoration(color: AppColors.colorPrimary),
-          height: MediaQuery.of(context).size.height,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomRight,
+            colors: [
+              AppColors.colorPrimary,
+              AppColors.colorSurface,
+              AppColors.colorTertiary,
+            ],
+            stops: const [0.05, 0.8, 0.9],
+          )),
           child: Flex(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             direction: Axis.vertical,
@@ -92,9 +101,10 @@ class HomePage extends StatelessWidget {
               Flexible(
                 child: Container(
                   padding: const EdgeInsets.all(20),
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
+                    color: AppColors.colorSurface,
+                    borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(48),
                         topRight: Radius.circular(48)),
                   ),
