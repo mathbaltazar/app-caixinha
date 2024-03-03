@@ -17,7 +17,7 @@ class AppWidget extends StatelessWidget {
       theme: ThemeData(
           useMaterial3: true,
           colorScheme: AppColors.lightColorScheme,
-          // todo textTheme: GoogleFonts.montserratTextTheme()
+          // todo textTheme: GoogleFonts.ralewayTextTheme()
       ),
       darkTheme: ThemeData(
         useMaterial3: true,

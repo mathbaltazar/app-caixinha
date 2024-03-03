@@ -1,43 +1,17 @@
-import 'dart:math';
-
 import 'package:app_caixinha/app/core/presentation/global_message.dart';
 import 'package:app_caixinha/app/core/routes/app_routes.dart';
 import 'package:app_caixinha/app/core/theme/color_schemes.g.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
+import '../controllers/home_controller.dart';
+import '../widgets/empty_participants_start_widget.dart';
 import '../widgets/text_field_editor_widget.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
 
-  final List<String> participantes = [
-    'Aloísio',
-    'Matheus',
-    'Roberto',
-    'Maria',
-    'Santino',
-    'Aloísio',
-    'Matheus',
-    'Roberto',
-    'Maria',
-    'Santino',
-    'Aloísio',
-    'Matheus',
-    'Roberto',
-    'Maria',
-    'Santino',
-    'Aloísio',
-    'Matheus',
-    'Roberto',
-    'Maria',
-    'Santino',
-    'Aloísio',
-    'Matheus',
-    'Roberto',
-    'Maria',
-    'Santino',
-  ];
+  final controller = Modular.get<HomeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -74,22 +48,30 @@ class HomePage extends StatelessWidget {
                 child: Column(
                   children: [
                     const SizedBox(height: 15),
-                    Text(
-                      '2024',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 24,
-                          color: AppColors.colorPrimary,
-                          fontWeight: FontWeight.bold),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 64, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryContainer,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        '2024',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 24,
+                            color: AppColors.colorPrimary,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
                     const SizedBox(height: 15),
-                    Text(
+                    const Text(
                       'Valor (mensal): R\$ 50,00',
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 18),
                     ),
                     const SizedBox(height: 15),
-                    Text(
+                    const Text(
                       'Pagar até: dia 10',
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 18),
@@ -118,49 +100,63 @@ class HomePage extends StatelessWidget {
                             fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 10),
-                      Expanded(
-                        child: Scrollbar(
-                          thumbVisibility: true,
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: participantes.length,
-                            itemBuilder: (_, index) {
-                              return InkWell(
-                                onTap: () {
-                                  Modular.to.pushNamed(
-                                    AppRoutes.detailsParticipant,
-                                    arguments: {
-                                      'participant': participantes[index]
-                                    },
-                                  ).then((value) {
-                                    if (value == 'deleted') {
-                                      // todo delete participant
-                                    }
-                                  });
-                                },
-                                child: ListTile(
-                                  title: Row(
-                                    children: [
-                                      Expanded(
-                                          child: Text(
-                                        participantes[index],
-                                        overflow: TextOverflow.ellipsis,
-                                      )),
-                                      Text(
-                                        'meses pagos: ${Random().nextInt(13)}',
-                                        style: const TextStyle(
-                                            color: Colors.black54),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      const Icon(
-                                        Icons.keyboard_double_arrow_right,
-                                        color: Colors.black26,
-                                      ),
-                                    ],
+                      Visibility(
+                        visible: controller.participantes.isEmpty,
+                        child: Expanded(
+                          child: SingleChildScrollView(
+                            child: EmptyParticipantsStartWidget(
+                              onAddPressed: () => _showAddParticipantModal(context),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                        visible: controller.participantes.isNotEmpty,
+                        child: Expanded(
+                          child: Scrollbar(
+                            thumbVisibility: true,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: controller.participantes.length,
+                              itemBuilder: (_, index) {
+                                return InkWell(
+                                  onTap: () {
+                                    Modular.to.pushNamed(
+                                      AppRoutes.detailsParticipant,
+                                      arguments: {
+                                        'participantId':
+                                            controller.participantes[index].id
+                                      },
+                                    ).then((value) {
+                                      if (value == 'deleted') {
+                                        controller.loadAllParticipants();
+                                      }
+                                    });
+                                  },
+                                  child: ListTile(
+                                    title: Row(
+                                      children: [
+                                        Expanded(
+                                            child: Text(
+                                          controller.participantes[index].nome,
+                                          overflow: TextOverflow.ellipsis,
+                                        )),
+                                        Text(
+                                          'meses: ${controller.participantes[index].pagamentos.length}',
+                                          style: const TextStyle(
+                                              color: Colors.black54),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Icon(
+                                          Icons.keyboard_double_arrow_right,
+                                          color: AppColors.colorPrimary,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ),
@@ -171,11 +167,13 @@ class HomePage extends StatelessWidget {
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () => _showAddParticipantModal(context),
-          icon: const Icon(Icons.person_add),
-          label: const Text('Novo Participante'),
-        ),
+        floatingActionButton: controller.participantes.isNotEmpty
+            ? FloatingActionButton.extended(
+                onPressed: () => _showAddParticipantModal(context),
+                icon: const Icon(Icons.person_add),
+                label: const Text('Novo Participante'),
+              )
+            : null,
       ),
     );
   }
@@ -190,13 +188,16 @@ class HomePage extends StatelessWidget {
             title: const Text('Novo participante'),
             content: TextFieldEditorWidget(
               hint: 'Nome',
-              onConfirm: (name) {
-                // validate
-                if (name.isEmpty) {
-                  GlobalMessage.show('Digite o nome do participante');
-                  return;
+              validation: (value) {
+                if (value.isEmpty) {
+                  return 'Digite o nome do participante';
                 }
-                // todo salvar novo participante
+                return null;
+              },
+              onConfirm: (name) {
+                controller.addNewParticipant(name);
+                GlobalMessage.show('Novo participante adicionado!',
+                    icon: Icons.person);
                 Modular.to.pop();
               },
             ),

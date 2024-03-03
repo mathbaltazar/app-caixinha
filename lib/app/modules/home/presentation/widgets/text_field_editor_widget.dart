@@ -1,20 +1,31 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-class TextFieldEditorWidget extends StatelessWidget {
-  TextFieldEditorWidget(
-      {super.key, required this.onConfirm, this.hint, this.currency = false});
+class TextFieldEditorWidget extends StatefulWidget {
 
-  final controller = TextEditingController(text: '');
+  const TextFieldEditorWidget(
+      {super.key, this.hint, this.currency = false, this.validation, required this.onConfirm});
+
   final String? hint;
   final bool currency;
+  final String? Function(String)? validation;
   final Function(String) onConfirm;
 
   @override
+  State<TextFieldEditorWidget> createState() => _TextFieldEditorWidgetState();
+}
+
+class _TextFieldEditorWidgetState extends State<TextFieldEditorWidget> {
+  final controller = TextEditingController(text: '');
+
+  String? _error;
+
+  @override
   Widget build(BuildContext context) {
-    if (currency) controller.text = '\$ 0,00';
+    if (widget.currency) controller.text = '\$ 0,00';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
@@ -22,15 +33,25 @@ class TextFieldEditorWidget extends StatelessWidget {
         TextField(
           controller: controller,
           decoration: InputDecoration(
-              label: Text(hint ?? ''),
+            errorText: _error,
+              label: Text(widget.hint ?? ''),
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(16))),
-          inputFormatters: currency ? [_currencyMask()] : null,
-          keyboardType: currency ? TextInputType.number : null,
+          inputFormatters: widget.currency ? [_currencyMask()] : null,
+          keyboardType: widget.currency ? TextInputType.number : null,
         ),
         const SizedBox(height: 20),
         FilledButton.icon(
-          onPressed: () => onConfirm(controller.text.trim()),
+          onPressed: () {
+            if (widget.validation != null) {
+              _error = widget.validation!(controller.text.trim());
+            }
+            if (_error != null) {
+              setState(() {});
+            } else {
+              widget.onConfirm(controller.text.trim());
+            }
+          },
           icon: const Icon(Icons.check_circle),
           label: const Text('Confirmar'),
         ),
