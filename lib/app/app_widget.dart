@@ -13,7 +13,7 @@ class AppWidget extends StatelessWidget {
       scaffoldMessengerKey: GlobalMessage.instance(context),
       routeInformationParser: Modular.routeInformationParser,
       routerDelegate: Modular.routerDelegate,
-      title: 'Caixinha', // todo editável? variável global?
+      title: 'Caixinha',
       theme: ThemeData(
           useMaterial3: true,
           colorScheme: AppColors.lightColorScheme,

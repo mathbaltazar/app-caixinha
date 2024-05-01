@@ -1,4 +1,6 @@
 class AppRoutes {
+
   static String get initialRoute => '/';
-  static String get detailsParticipant => '/details-participant';
+  static String get participantDetails => '/details-participant';
+  static String get savingsSchemeForm => '/savings-scheme-form';
 }

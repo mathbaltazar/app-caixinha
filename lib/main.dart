@@ -26,7 +26,7 @@ void main() async {
       ),
     );
   }, (error, stack) {
-    print('APP.CAIXINHA error >>> $error');
-    print('APP.CAIXINHA stack >>> $stack');
+    debugPrint('APP.CAIXINHA error >>> $error');
+    debugPrint('APP.CAIXINHA stack >>> $stack');
   });
 }

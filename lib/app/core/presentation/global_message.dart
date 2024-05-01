@@ -1,4 +1,3 @@
-import 'package:app_caixinha/app/core/theme/color_schemes.g.dart';
 import 'package:flutter/material.dart';
 
 class GlobalMessage {
@@ -13,19 +12,19 @@ class GlobalMessage {
       throw 'Scaffold messenger not initialized';
     }
     _messenger!.currentState!.showSnackBar(SnackBar(
-      duration: Duration(milliseconds: milliseconds ?? 1000),
+      duration: Duration(milliseconds: milliseconds ?? 2000),
       behavior: SnackBarBehavior.floating,
       showCloseIcon: closeIcon,
-      closeIconColor: Colors.black87,
+      closeIconColor: Colors.white,
       content: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon ?? Icons.info, color: Colors.black87),
+          Icon(icon ?? Icons.info, color: Colors.white),
           const SizedBox(width: 10),
           Text(
             message,
             style: const TextStyle(
-              color: Colors.black87,
+              color: Colors.white,
               fontWeight: FontWeight.bold,
               fontSize: 16,
             ),
@@ -33,7 +32,6 @@ class GlobalMessage {
         ],
       ),
       elevation: 12,
-      backgroundColor: AppColors.darkColorScheme.tertiary.withAlpha(240),
     ));
   }
 }

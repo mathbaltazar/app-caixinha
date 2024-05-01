@@ -1,8 +1,5 @@
-import 'dart:io';
-
+import 'package:app_caixinha/app/core/presentation/utils/textfield_input_mask.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 
 class TextFieldEditorWidget extends StatefulWidget {
 
@@ -37,7 +34,7 @@ class _TextFieldEditorWidgetState extends State<TextFieldEditorWidget> {
               label: Text(widget.hint ?? ''),
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(16))),
-          inputFormatters: widget.currency ? [_currencyMask()] : null,
+          inputFormatters: widget.currency ? [TextfieldInputMask.currencyMask()] : null,
           keyboardType: widget.currency ? TextInputType.number : null,
         ),
         const SizedBox(height: 20),
@@ -59,16 +56,4 @@ class _TextFieldEditorWidgetState extends State<TextFieldEditorWidget> {
       ],
     );
   }
-
-  static TextInputFormatter _currencyMask() => TextInputFormatter.withFunction(
-        (oldValue, TextEditingValue newValue) {
-      String onlyDigits = newValue.text.replaceAll(RegExp('[^0-9]'), '');
-      String formatted = _formatter.format((double.parse(onlyDigits) / 100)).trim();
-      return TextEditingValue(
-          text: formatted,
-          selection: TextSelection.collapsed(offset: formatted.length));
-    });
-
-  static final _formatter =
-      NumberFormat.currency(locale: Platform.localeName, symbol: '\$');
 }
